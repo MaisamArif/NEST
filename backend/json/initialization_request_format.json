@@ -1,0 +1,19 @@
+{
+  "Details": {
+    "Username" : "Anonymous",
+    "Story"    : "Rabbit Story",
+    "Number_Characters" : 2
+  },
+  
+  "Character_1": {
+      "Name": "Rabbit",
+      "Position": "Right",
+      "Emotion": "Happy"
+    },
+    
+  "Character_2": {
+      "Name": "Turtle",
+      "Position": "Left",
+      "Emotion": "Sad"
+    }
+}

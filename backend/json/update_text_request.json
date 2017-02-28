@@ -1,0 +1,29 @@
+{
+  "Details": {
+    "Story": "Rabbit Story",
+    "Username": "Anonymous",
+    "Number_of_Frames": 2,
+    "Frame_start": 1,
+    "Frame_end": 2
+  },
+  "Frame_1": {
+    "Character_1": {
+      "Name": "Rabbit",
+      "Text": ""
+    },
+    "Character_2": {
+      "Name": "Turtle",
+      "Text": ""
+    }
+  },
+  "Frame_2": {
+    "Character_1": {
+      "Name": "Rabbit",
+      "Text": ""
+    },
+    "Character_2": {
+      "Name": "Turtle",
+      "Text": ""
+    }
+  }
+}

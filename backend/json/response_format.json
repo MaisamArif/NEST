@@ -1,0 +1,55 @@
+{
+  "Details": {
+    "Story": "Rabbit Story",
+    "Username": "Anonymous",
+    "Number_of_Frames": 2,
+    "Frame_start": 1,
+    "Frame_end": 2
+  },
+  "Frame_1": {
+    "Character_1": {
+      "Name": "Rabbit",
+      "Mouth_Point": "?",
+      "Direction": "Left",
+      "Position": "Right",
+      "Textbox_pos": "Right",
+      "Text": "",
+      "Emotion": "Happy"
+    },
+    "Character_2": {
+      "Name": "Turtle",
+      "Mouth_Point": "?",
+      "Direction": "Right",
+      "Position": "Left",
+      "Textbox_pos": "Left",
+      "Text": "",
+      "Emotion": "Sad"
+    },
+    "Background": {
+      "Image_name": "ground1"
+    }
+  },
+  "Frame_2": {
+    "Character_1": {
+      "Name": "Rabbit",
+      "Mouth_Point": "?",
+      "Direction": "Left",
+      "Position": "Right",
+      "Textbox_pos": "Right",
+      "Text": "",
+      "Emotion": "Sad"
+    },
+    "Character_2": {
+      "Name": "Turtle",
+      "Mouth_Point": "?",
+      "Direction": "Right",
+      "Position": "Left",
+      "Textbox_pos": "Left",
+      "Text": "",
+      "Emotion": "Sad"
+    },
+    "Background": {
+      "Image_name": "ground2"
+    }
+  }
+}
