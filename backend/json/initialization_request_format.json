@@ -4,16 +4,19 @@
     "Story"    : "Rabbit Story",
     "Number_Characters" : 2
   },
-  
-  "Character_1": {
+  "Characters": [
+    {
       "Name": "Rabbit",
       "Position": "Right",
+      "Social"  : 0.3,
       "Emotion": "Happy"
     },
-    
-  "Character_2": {
+
+    {
       "Name": "Turtle",
       "Position": "Left",
+      "Social"  : 0.2,
       "Emotion": "Sad"
     }
+  ]
 }

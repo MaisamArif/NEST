@@ -6,50 +6,61 @@
     "Frame_start": 1,
     "Frame_end": 2
   },
-  "Frame_1": {
-    "Character_1": {
-      "Name": "Rabbit",
-      "Mouth_Point": "?",
-      "Direction": "Left",
-      "Position": "Right",
-      "Textbox_pos": "Right",
-      "Text": "",
-      "Emotion": "Happy"
+  "Frames": 
+  [
+    {
+      "Characters":
+      [
+        {
+          "Name"        : "Rabbit",
+          "Direction"   : "Left",
+          "Position"    : "Right",
+          "Text"        : "",
+          "Emotion"     : "Happy",
+          "URL"         : "aws link/rabbit_happy"
+        },
+        {
+          "Name"        : "Turtle",
+          "Direction"   : "Right",
+          "Position"    : "Left",
+          "Text"        : "",
+          "Emotion"     : "Sad",
+          "URL"         : "aws link/turtle_sad"
+        }
+      ],
+
+      "Background": 
+      {
+        "Image_name": "ground1"
+      }
     },
-    "Character_2": {
-      "Name": "Turtle",
-      "Mouth_Point": "?",
-      "Direction": "Right",
-      "Position": "Left",
-      "Textbox_pos": "Left",
-      "Text": "",
-      "Emotion": "Sad"
-    },
-    "Background": {
-      "Image_name": "ground1"
+
+    {
+      "Characters": 
+      [
+        {
+          "Name": "Rabbit",
+          "Direction": "Left",
+          "Position": "Right",
+          "Text": "",
+          "Emotion": "Sad",
+          "URL" : "aws link/rabbit_sad"
+        },
+        {
+          "Name": "Turtle",
+          "Direction": "Right",
+          "Position": "Left",
+          "Text": "",
+          "Emotion": "Sad",
+          "URL" : "aws link/turtle_sad"
+        }
+      ],
+
+      "Background": 
+      {
+        "Image_name": "ground2"
+      }
     }
-  },
-  "Frame_2": {
-    "Character_1": {
-      "Name": "Rabbit",
-      "Mouth_Point": "?",
-      "Direction": "Left",
-      "Position": "Right",
-      "Textbox_pos": "Right",
-      "Text": "",
-      "Emotion": "Sad"
-    },
-    "Character_2": {
-      "Name": "Turtle",
-      "Mouth_Point": "?",
-      "Direction": "Right",
-      "Position": "Left",
-      "Textbox_pos": "Left",
-      "Text": "",
-      "Emotion": "Sad"
-    },
-    "Background": {
-      "Image_name": "ground2"
-    }
-  }
+  ]
+
 }

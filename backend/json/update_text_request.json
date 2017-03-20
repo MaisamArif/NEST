@@ -6,24 +6,33 @@
     "Frame_start": 1,
     "Frame_end": 2
   },
-  "Frame_1": {
-    "Character_1": {
-      "Name": "Rabbit",
-      "Text": ""
+
+  "Frames": [ 
+    {
+      "Characters":[
+        {
+          "Name": "Rabbit",
+          "Text": ""
+        },
+
+        {
+          "Name": "Turtle",
+          "Text": ""
+        }
+      ]
     },
-    "Character_2": {
-      "Name": "Turtle",
-      "Text": ""
+
+    {
+      "Characters":[
+        {
+          "Name": "Rabbit",
+          "Text": ""
+        },
+        {
+          "Name": "Turtle",
+          "Text": ""
+        }
+      ]
     }
-  },
-  "Frame_2": {
-    "Character_1": {
-      "Name": "Rabbit",
-      "Text": ""
-    },
-    "Character_2": {
-      "Name": "Turtle",
-      "Text": ""
-    }
-  }
+  ]
 }
