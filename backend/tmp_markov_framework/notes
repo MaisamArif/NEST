@@ -1,0 +1,5 @@
+1 - determine inputs and outputs ( for initial and continue ) 
+2 - create rng for initial 
+3 - create rng for state to state transistion
+
+4 - create json parser
