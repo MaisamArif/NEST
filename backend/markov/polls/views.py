@@ -2,7 +2,7 @@ from django.http import HttpResponse
 import json
 import random
 import numpy as np
-from polls.models import Story, CharacterObjects, Frames, Character
+from polls.models import Story, CharacterObjects, Frame, Character
 
 # Create your views here.
 def index(request):
@@ -74,7 +74,7 @@ class MarkovGenerator:
         out_matricies = []
         
         for i in range(num * 2):
-            out_matricies.append(generate(4,4))
+            out_matricies.append(self.generate(4,4))
         
         closeness_vectors = []
         for x in range(num):
@@ -102,23 +102,23 @@ class MarkovGenerator:
     #all the matricies for every character
     def new_emotion_one_character(self,
                                   character_acting_id,    #id of acting character in frame
-                                  character_in_frame_ids, #id of other characters in frame
+                                  characters_in_frame_ids, #id of other characters in frame
                                   char_emotions,          #array of emotions of characters in frame
                                   personality_matricies,  #array of personality matricies of characters in frame
                                   impact_matricies,       #array of impact matricies of characters in frame
                                   socialbility_params,    #array of socialbility of characters in frame
                                   closeness_vectors):     #array of closeness vectors of characters in frame
         
-        if len(character_in_frame_ids) == 0:
+        if len(characters_in_frame_ids) == 0:
             P0   = personality_matricies[character_acting_id]
             emo0 = char_emotions[character_acting_id]
             
             if random.randint(0,1) == 1:
-                position_and_direction = ['right', 'left']
+                direction = 'right'
             else:
-                position_and_direction = ['left', 'right']
+                direction = 'left'
             
-            return (self.traverse_row(P0.A[emo0]),position_and_direction)
+            return (self.traverse_row(P0.A[emo0]), direction)
         
         else:
             P0   = personality_matricies[character_acting_id]
@@ -126,16 +126,16 @@ class MarkovGenerator:
             s0   = socialbility_params[character_acting_id]
             
             if random.randint(0,1) == 1:
-                position_and_direction = ['right', 'left']
+                direction = 'right'
             else:
-                position_and_direction = ['left', 'right']
+                direction = 'left'
             
             total_influence = np.matrix([[0.0, 0.0, 0.0, 0.0],
                                          [0.0, 0.0, 0.0, 0.0],
                                          [0.0, 0.0, 0.0, 0.0],
                                          [0.0, 0.0, 0.0, 0.0]])
             
-            for elem in character_in_frame_ids:
+            for elem in characters_in_frame_ids:
                 M = impact_matricies[elem].A[char_emotions[elem]]
                 v = closeness_vectors[character_acting_id][elem]
                 M = np.repeat(M[np.newaxis,:], 4, 0)
@@ -143,7 +143,7 @@ class MarkovGenerator:
         
             transition_matrix = (1-s0) * P0 + s0 *(total_influence)
         
-            return(self.traverse_row(transition_matrix.A[emo0]), position_and_direction)
+            return(self.traverse_row(transition_matrix.A[emo0]), direction)
 
 ############################################################
 #                     INITIALIZATION
@@ -172,7 +172,7 @@ def Initialization(request):
         emotion      = translate_to_num(elem['Emotion'])
         personality  = matrices[char_id]
         impact       = matrices[char_id + num_char]
-        c_vector     = closeness_vectors[character_id]
+        c_vector     = closeness_vectors[char_id]
             
         c = CharacterObjects(story           = s,
                              character_id    = char_id,
@@ -210,7 +210,7 @@ def UpdateText(request):
     else:
         #return JSON wanted
 
-        frames = s.frame_set.order_by('id')
+        frames = s.frame_set.order_by('frame_id')
 
         for elem in string['Frames']:
             f = frames[start]
@@ -235,65 +235,57 @@ def UpdateText(request):
 
 def Continue(request):
 
-    string = json.loads(request.body)
+    #Load Json and variables
+    string   = json.loads(request.body)
+    username = string['Details']['Username']
+    story    = string['Details']['Story']
+    start    = string['Details']['Frame_start']
+    end      = string['Details']['Frame_end']
     
-    username   = string['Details']['Username']
-    story      = string['Details']['Story']
-    start      = string['Details']['Frame_start']
-    end        = string['Details']['Frame_end']
-    
-    s = Story.objects.get(story_name = story, user_name = username)
+    #getting the story and basic data for accessing the db
+    s                = Story.objects.get(story_name = story, user_name = username)
     last_known_frame = len(s.frame_set.all())
-    char_objs =  s.characterobjects_set.order_by('id')        
+    char_objs        = s.characterobjects_set.order_by('character_id')       
 
-    for elem in range(last_known_frame, end + 1):
-        frame = Frame(background_image = 'http://34.208.169.220/mint_background.jpg', story = s)
+    #FRAMES
+    for elem in range(last_known_frame + 1, end + 1):
+        frame = Frame(background_image = 'http://34.208.169.220/mint_background.jpg', frame_id = elem, story = s)
         frame.save()
-#Modify for 2 Characters
-        c1 = random.randint(0,len(char_objs) -1)
-        c2 = random.randint(0,len(char_objs) -1)
+
+        #change to this if we start doing more than 2 characters a frame
+        #num_characters_in_frame = random.randint(1,len(char_objs))
+        num_characters_in_frame = 2
+        
+        chars_in_frame = random.sample([char_obj.character_id for char_obj in char_objs],
+                                       num_characters_in_frame)
 
         emotions          = [char_obj.recent_emotion for char_obj in char_objs]
         personality       = [np.matrix(json.loads(char_obj.personality)) for char_obj in char_objs]
         impact            = [np.matrix(json.loads(char_obj.impact)) for char_obj in char_objs]
         socialbility      = [char_obj.socialbility for char_obj in char_objs]
         closeness_vectors = [json.loads(char_objs.closeness) for char_obj in char_objs]
-        
-        if c1 == c2:
-           emotion, direction = MarkovGenerator.new_emotion_one_character(char_objs[c1].character_id,
-                                                      [],
+
+        #CHARACTERS IN FRAME
+        for elem in chars_in_frame:
+            c1       = elem
+            c2       = list(filter(lambda x: not x == c1, chars_in_frame))
+
+            emotion, direction = MarkovGenerator.new_emotion_one_character(
+                                                      c1,
+                                                      c2,
                                                       emotions,
                                                       personality,
                                                       impact,
                                                       socialbility,
                                                       closeness_vectors)
-           c = Character(name = char_objs[c1].name, direction = direction, text = '', frame = frame)
-           c.save()
-
-        else:
-
-#MODIFY HERE FOR 2 CHARACTERS
-            emotion, direction = MarkovGenerator.new_emotion_one_character(char_objs[c1].character_id,
-                                                      [char_objs[c2].character_id],
-                                                      emotions,
-                                                      personality,
-                                                      impact,
-                                                      socialbility,
-                                                      closeness_vectors)
-            c = Character(name = char_objs[c1].name, direction = direction, text = '', frame = frame)
+            #not sure if char_objs[c1].name works
+            c = Character(name = char_objs[c1].name, direction = direction, text = '', emotion = emotion, frame = frame)
             c.save()
 
-            emotion, direction = MarkovGenerator.new_emotion_one_character(char_objs[c2].character_id,
-                                                      [char_objs[c1].character_id],
-                                                      emotions,
-                                                      personality,
-                                                      impact,
-                                                      socialbility,
-                                                      closeness_vectors)
+            char_objs[c1].recent_emotion = emotion 
+            char_objs[c1].save()
 
-            c = Character(name = char_objs[c2].name, direction = direction, text = '', frame = frame)
-            c.save()
-    return  generate_response(username, story, start, end)
+    return generate_response(username, story, start, end)
 
 ############################################################
 #                     Generate Response
@@ -309,27 +301,31 @@ def generate_response(username, story, frame_start, frame_end):
                        },
                      'Frames' : []
                     }
+
    
-    s = Story.objects.get(story_name = story, user_name = username)
-    frames = s.frame_set.order_by('id')
+    s      = Story.objects.get(story_name = story, user_name = username)
+    frames = s.frame_set.order_by('frame_id')
 
     count = 0
     for elem in range(frame_start, frame_end + 1):
-        
-        json_response['Frames'].append({})        
+        json_response['Frames'].append({})
         json_response['Frames'][count]['Background'] = {'Image_name' :  url + 'mint_background.jpg'}
-        
         json_response['Frames'][count]['Characters'] = []
-        #add as many characters that are in the frame
         
-        for char in db.frame:
+        #get the frame we want
+        frame = frames.get(frame_id = elem)
+
+        #add as many characters that are in the frame
+        char_count = 0
+        for char in frame.character_set.order_by('id'):
             json_response['Frames'][count]['Characters'].append({}) 
-            json_response['Frames'][count]['Characters']['Direction']  = db.direction
-            json_response['Frames'][count]['Characters']['Emotion']    = db.emotion
-            json_response['Frames'][count]['Characters']['Mouthpoint'] = url + str.lower(db.name) + emotion + '_mouthpoint.txt'
-            json_response['Frames'][count]['Characters']['Name']       = db.name
-            json_response['Frames'][count]['Characters']['Text']       = db.text
-            json_response['Frames'][count]['Characters']['URL']        = url + str.lower(db.name) + '.png'
+            json_response['Frames'][count]['Characters'][char_count]['Direction']  = char.direction
+            json_response['Frames'][count]['Characters'][char_count]['Emotion']    = char.emotion
+            json_response['Frames'][count]['Characters'][char_count]['Name']       = char.name
+            json_response['Frames'][count]['Characters'][char_count]['Text']       = char.text
+            json_response['Frames'][count]['Characters'][char_count]['URL']        = url + str.lower(char.name) + '/' + char.emotion + '.png'
+            json_response['Frames'][count]['Characters'][char_count]['Mouthpoint'] = url + str.lower(char.name) + '/' + char.emotion + '_mouthpoint.txt'
+            char_count += 1
             
         count += 1
         
