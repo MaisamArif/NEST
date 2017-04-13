@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 import json
 import random
+import ast
 import numpy as np
 from polls.models import Story, CharacterObjects, Frame, Character
 
@@ -150,9 +151,8 @@ class MarkovGenerator:
 ############################################################
 
 def Initialization(request):
-
-    string = json.loads(request.body)
-    
+   
+    string   = ast.literal_eval(request.body)
     username = string['Details']['Username']
     story    = string['Details']['Story']
     num_char = len(string['Characters'])
@@ -195,7 +195,7 @@ def Initialization(request):
 
 def UpdateText(request):
     
-    string = json.loads(request.body)
+    string     = ast.literal_eval(request.body)
     username   = string['Details']['Username']
     story      = string['Details']['Story']
     start      = string['Details']['Frame_start']
@@ -236,7 +236,7 @@ def UpdateText(request):
 def Continue(request):
 
     #Load Json and variables
-    string   = json.loads(request.body)
+    string   = ast.literal_eval(request.body)
     username = string['Details']['Username']
     story    = string['Details']['Story']
     start    = string['Details']['Frame_start']

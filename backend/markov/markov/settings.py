@@ -25,7 +25,7 @@ SECRET_KEY = 'nu9wd(cs$a$zh73l3@xev8i8eb9b2_1_^8akan=bc(iaw7jh$h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['198.168.6.115', 'localhost', '127.0.0.1', "testserver"]
 
 
 # Application definition
