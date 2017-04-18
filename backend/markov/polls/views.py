@@ -20,22 +20,22 @@ def json_shit(request):
 
 def translate(num):
     if num == 0:
-        return "Happy"
+        return "happy"
     if num == 1:
-        return "Sad"
+        return "sad"
     if num == 2:
-        return "Angry"
+        return "angry"
     if num == 3:
-        return "Fear"     
+        return "fear"     
 
 def translate_to_num(stringy):
-    if stringy == "Happy":
+    if str.lower(stringy) == "happy":
         return 0
-    if stringy == "Sad":
+    if str.lower(stringy) == "sad":
         return 1
-    if stringy == "Angry":
+    if str.lower(stringy) == "angry":
         return 2
-    if stringy == "Fear":
+    if str.lower(stringy) == "fear":
         return 3
 
 
@@ -220,18 +220,14 @@ def UpdateText(request):
         #return JSON wanted
         frames = s.frame_set.order_by('frame_id')
 
-        print "outside for"
         for elem in string['Frames']:
             f = frames[start_iterator - 1]
-            print "elem"
             for sub_elem in elem['Characters']:
-                print"sub_elem"
                 char_name = sub_elem['Name']
                 text      = sub_elem['Text']
                 c      = f.character_set.get(name = char_name)
                 c.text = text
                 c.save()
-                print "saved"
 
             start_iterator += 1
             if start_iterator > end:
@@ -314,7 +310,7 @@ def Continue(request):
 ############################################################
 
 def generate_response(username, story, frame_start, frame_end):
-    url = 'ec2-52-10-27-122.us-west-2.compute.amazonaws.com'
+    url = 'ec2-52-10-27-122.us-west-2.compute.amazonaws.com/'
     json_response = {'Details' : 
             {"Story": story,
                 "Username": username,
