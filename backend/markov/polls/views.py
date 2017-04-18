@@ -314,7 +314,7 @@ def Continue(request):
 ############################################################
 
 def generate_response(username, story, frame_start, frame_end):
-    url = 'http://34.208.169.220/'
+    url = 'ec2-52-10-27-122.us-west-2.compute.amazonaws.com'
     json_response = {'Details' : 
             {"Story": story,
                 "Username": username,
