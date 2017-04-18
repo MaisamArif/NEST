@@ -158,7 +158,7 @@ def Initialization(request):
     num_char = len(string['Characters'])
 
     if Story.objects.filter(story_name = story, user_name = username).exists():
-        return HttpResponse(generate_response(username,story,0,0))
+        return HttpResponse("{}",status = 400)
 
     s = Story(story_name = story, user_name = username)
     s.save()
@@ -204,32 +204,37 @@ def UpdateText(request):
     story    = string['Details']['Story']
     start    = string['Details']['Frame_start']
     end      = string['Details']['Frame_end']
+    start_iterator = start
 
     if not Story.objects.filter(story_name = story, user_name = username).exists():
-        return HttpResponse(generate_response(username,story,0,0))
+        return HttpResponse("{}",status = 400)
 
     s = Story.objects.get(story_name = story, user_name = username)
     last_known_frame = len(s.frame_set.all())
     
     #get number of the last frame from db
     if last_known_frame < int(end):
-        return HttpResponse(generate_response(username,story,0,0))
+        return HttpResponse("{}",status = 400)
+
     else:
         #return JSON wanted
         frames = s.frame_set.order_by('frame_id')
 
+        print "outside for"
         for elem in string['Frames']:
-            f = frames[start - 1]
-            
+            f = frames[start_iterator - 1]
+            print "elem"
             for sub_elem in elem['Characters']:
+                print"sub_elem"
                 char_name = sub_elem['Name']
                 text      = sub_elem['Text']
                 c      = f.character_set.get(name = char_name)
                 c.text = text
                 c.save()
+                print "saved"
 
-            start += 1
-            if start > end:
+            start_iterator += 1
+            if start_iterator > end:
                 break
 
     return HttpResponse(generate_response(username,story,start,end))
@@ -249,6 +254,9 @@ def Continue(request):
     start    = string['Details']['Frame_start']
     end      = string['Details']['Frame_end']
 
+    if not Story.objects.filter(story_name = story, user_name = username).exists():
+        return HttpResponse("{}",status = 400)
+    
     #getting the story and basic data for accessing the db
     s                = Story.objects.get(story_name = story, user_name = username)
     last_known_frame = len(s.frame_set.all())
