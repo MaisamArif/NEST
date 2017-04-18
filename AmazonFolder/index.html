@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Responsive Web Comics</title>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/style.css">
+
+<link rel="stylesheet" href="css/focuspoint.css">
+<script src="js/focuspoint.js"></script>
+
+<!--<script src="js/masonry.pkgd.min.js"></script>-->
+<script type="text/javascript" src="js/json_parser.js"></script>
+<!--<script src="js/webcomic.js"></script>-->
+
+<link rel=icon href=images/Alternative/favicon.png>
+</head>
+
+<body>
+
+<div id="ComicFrame">
+  <div id="LeftFrame" class="focuspoint" data-focus-x="-0.47" data-focus-y="0.54" data-focus-w="899" data-focus-h="800">
+    <div class="speech-bub-left" id="C1TextBox">Default Text 1</div>
+    <img src="images/Alternative/atlet.png" alt="" />
+  </div>
+  <div id="RightFrame" class="focuspoint" data-focus-x="-0.39" data-focus-y="0.04" data-focus-w="1467" data-focus-h="1641">
+    <div class="speech-bub-left" id="C1TextBox">Default Text 1</div>
+    <img src="images/Alternative/default.png" alt="" />
+  </div>
+</div>
+
+<script>
+
+$( document ).ready(function() {
+$('.focuspoint').focusPoint();
+});
+
+</script>
+
+</html>
