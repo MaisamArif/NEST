@@ -192,7 +192,7 @@ def Initialization(request):
 
         char_id += 1
 
-    return HttpResponse(generate_response(username,story,0,0))
+    return generate_response(username,story,0,0)
 
 ############################################################
 #                     UPDATE TEXT
@@ -235,7 +235,7 @@ def UpdateText(request):
             if start_iterator > end:
                 break
 
-    return HttpResponse(generate_response(username,story,start,end))
+    return generate_response(username,story,start,end)
 
 ############################################################
 #                     Continue Past Story
@@ -312,7 +312,7 @@ def Continue(request):
             char_objs[c1].recent_emotion = emotion 
             char_objs[c1].save()
 
-    return HttpResponse(generate_response(username, story, start, end))
+    return generate_response(username, story, start, end)
 
 ############################################################
 #                     Generate Response
@@ -330,15 +330,7 @@ def generate_response(username, story, frame_start, frame_end):
             }
 
     if not Story.objects.filter(story_name = story, user_name = username).exists():
-        json_response = {'Details' : 
-                {"Story": "DNE",
-                    "Username": "DNE",
-                    "Frame_start": frame_start,
-                    "Frame_end": frame_end
-                    },
-                'Frames' : []
-                }
-        return json.dumps(json_response)
+        return HttpResponse("{}",status = 400)
 
     s      = Story.objects.get(story_name = story, user_name = username)
     frames = s.frame_set.order_by('frame_id')
@@ -347,7 +339,7 @@ def generate_response(username, story, frame_start, frame_end):
     try:
         frame = frames.get(frame_id = frame_end)
     except:
-        return json.dumps(json_response)
+        return HttpResponse(json.dumps(json_response))
 
     count = 0
     for elem in range(frame_start, frame_end + 1):
@@ -372,4 +364,4 @@ def generate_response(username, story, frame_start, frame_end):
 
         count += 1
 
-    return json.dumps(json_response)
+    return HttpResponse(json.dumps(json_response))
