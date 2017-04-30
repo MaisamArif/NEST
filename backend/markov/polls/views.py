@@ -258,9 +258,15 @@ def Continue(request):
     last_known_frame = len(s.frame_set.all())
     char_objs        = s.characterobjects_set.order_by('character_id')       
 
+    if last_known_frame + 1 < start:
+        return HttpResponse("{}",status = 400)
+
+    if start > end:
+        return HttpResponse("{}",status = 400)
+
     #FRAMES
-    for elem in range(last_known_frame, end):
-        frame = Frame(background_image = 'http://34.208.169.220/mint_background.jpg', frame_id = elem+1, story = s)
+    for elem in range(start - 1, end):
+        frame = Frame(background_image = 'http://34.208.169.220/mint_background.jpg', frame_id = elem + 1, story = s)
         frame.save()
 
         #change to this if we start doing more than 2 characters a frame
