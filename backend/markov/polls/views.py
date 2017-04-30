@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 import json
 import random
 import ast
@@ -149,7 +150,7 @@ class MarkovGenerator:
 ############################################################
 #                     INITIALIZATION
 ############################################################
-
+@csrf_exempt
 def Initialization(request):
 
     string   = ast.literal_eval(request.body)
@@ -197,6 +198,7 @@ def Initialization(request):
 #                     UPDATE TEXT
 ############################################################
 
+@csrf_exempt
 def UpdateText(request):
 
     string   = ast.literal_eval(request.body)
@@ -239,6 +241,7 @@ def UpdateText(request):
 #                     Continue Past Story
 ############################################################
 
+@csrf_exempt
 def Continue(request):
 
     marky = MarkovGenerator()
@@ -256,8 +259,8 @@ def Continue(request):
     #getting the story and basic data for accessing the db
     s                = Story.objects.get(story_name = story, user_name = username)
     last_known_frame = len(s.frame_set.all())
-    char_objs        = s.characterobjects_set.order_by('character_id')       
-
+    char_objs        = s.characterobjects_set.order_by('character_id')
+       
     if last_known_frame + 1 < start:
         return HttpResponse("{}",status = 400)
 
@@ -266,7 +269,7 @@ def Continue(request):
 
     #FRAMES
     for elem in range(start - 1, end):
-        frame = Frame(background_image = 'http://34.208.169.220/mint_background.jpg', frame_id = elem + 1, story = s)
+	frame = Frame(background_image = 'http://34.208.169.220/mint_background.jpg', frame_id = elem+1, story = s)
         frame.save()
 
         #change to this if we start doing more than 2 characters a frame
@@ -316,7 +319,7 @@ def Continue(request):
 ############################################################
 
 def generate_response(username, story, frame_start, frame_end):
-    url = 'ec2-52-10-27-122.us-west-2.compute.amazonaws.com/'
+    url = 'https://responsivewebcomics.me'
     json_response = {'Details' : 
             {"Story": story,
                 "Username": username,
@@ -363,8 +366,8 @@ def generate_response(username, story, frame_start, frame_end):
             json_response['Frames'][count]['Characters'][char_count]['Emotion']    = translate(char.emotion)
             json_response['Frames'][count]['Characters'][char_count]['Name']       = char.name
             json_response['Frames'][count]['Characters'][char_count]['Text']       = char.text
-            json_response['Frames'][count]['Characters'][char_count]['URL']        = url + str.lower(char.name.encode('ascii', 'ignore')) + '/' + translate(char.emotion) + '.png'
-            json_response['Frames'][count]['Characters'][char_count]['Mouthpoint'] = url + str.lower(char.name.encode('ascii', 'ignore')) + '/' + translate(char.emotion) + '_mouthpoint.txt'
+            json_response['Frames'][count]['Characters'][char_count]['URL']        = url + str(char.name.encode('ascii', 'ignore')) + '/' + translate(char.emotion) + '.png'
+            json_response['Frames'][count]['Characters'][char_count]['Mouthpoint'] = url + str(char.name.encode('ascii', 'ignore')) + '/' + translate(char.emotion) + '_mouthpoint.txt'
             char_count += 1
 
         count += 1
