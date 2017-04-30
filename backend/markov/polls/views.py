@@ -260,8 +260,12 @@ def Continue(request):
     s                = Story.objects.get(story_name = story, user_name = username)
     last_known_frame = len(s.frame_set.all())
     char_objs        = s.characterobjects_set.order_by('character_id')
-       
-    if last_known_frame + 1 < start:
+
+    if last_known_frame + 1 > start and end <= last_known_frame:
+        return generate_response(username, story, start, end)
+
+    if last_known_frame + 1 >start:
+        print "frame ob check"
         return HttpResponse("{}",status = 400)
 
     if start > end:
