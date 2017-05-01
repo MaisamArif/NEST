@@ -273,7 +273,7 @@ def Continue(request):
 
     #FRAMES
     for elem in range(start - 1, end):
-        frame = Frame(background_image = 'https://responsivewebcomics.me"+'/'+"mint_background.jpg', frame_id = elem+1, story = s)
+        frame = Frame(background_image = 'https://responsivewebcomics.me" + "/mint_background.jpg', frame_id = elem+1, story = s)
         frame.save()
 
         #change to this if we start doing more than 2 characters a frame
