@@ -27,7 +27,7 @@ def translate(num):
     if num == 2:
         return "angry"
     if num == 3:
-        return "fear"     
+        return "fear"
 
 def translate_to_num(stringy):
     if str.lower(stringy) == "happy":
@@ -70,6 +70,21 @@ class MarkovGenerator:
             matrix[i] = [round(x, 3) for x in matrix[i]]
 
         return np.matrix(matrix)
+   
+
+    def affinity(self, personality_matrix, num):
+        matrix = []
+        for elem in range(len(personality_matrix)):
+            if elem == num:
+                matrix.append(float(random.randint(0, 1000) + 750)/1000)
+            else:
+                matrix.append(float(random.randint(0, 1000))/1000)
+
+        matrix = self.normalize(matrix)
+        matrix = [round(x, 3) for x in matrix]
+        personality_matrix[num] = matrix
+
+        return personality_matrix
 
 
     def initialize(self, num):
@@ -175,11 +190,12 @@ def Initialization(request):
         position     = elem['Position']
         socialbility = elem['Social']
         emotion      = translate_to_num(elem['Emotion'])
-        personality  = matrices[char_id]
+        personality  = MarkovGenerator.affinity(marky, matrices[char_id], emotion)
         impact       = matrices[char_id + num_char]
         c_vector     = closeness_vectors[char_id]
 
-        c = CharacterObjects(story           = s,
+        c = CharacterObjects(
+                story           = s,
                 character_id    = char_id,
                 name            = name,
                 position        = position,
