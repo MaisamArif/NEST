@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'nu9wd(cs$a$zh73l3@xev8i8eb9b2_1_^8akan=bc(iaw7jh$h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['ec2-52-10-27-122.us-west-2.compute.amazonaws.com', 'localhost', '127.0.0.1', "testserver"]
+ALLOWED_HOSTS = ['ec2-52-10-27-122.us-west-2.compute.amazonaws.com', 'localhost', '127.0.0.1', "testserver", "responsivewebcomics.me", "108.247.88.205"]
 
 
 # Application definition
