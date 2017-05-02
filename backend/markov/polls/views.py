@@ -174,7 +174,7 @@ def Initialization(request):
     num_char = len(string['Characters'])
 
     if Story.objects.filter(story_name = story, user_name = username).exists():
-        return HttpResponse("{}",status = 400)
+        return HttpResponse(json.dumps({'Error':'Story already exists'}),status = 400)
 
     s = Story(story_name = story, user_name = username)
     s.save()
@@ -225,14 +225,14 @@ def UpdateText(request):
     start_iterator = start
 
     if not Story.objects.filter(story_name = story, user_name = username).exists():
-        return HttpResponse("{}",status = 400)
+        return HttpResponse(json.dumps({'Error':'Story does not exist'}),status = 400)
 
     s = Story.objects.get(story_name = story, user_name = username)
     last_known_frame = len(s.frame_set.all())
     
     #get number of the last frame from db
     if last_known_frame < int(end):
-        return HttpResponse("{}",status = 400)
+        return HttpResponse(json.dumps({'Error':'Update text out of bounds'}),status = 400)
 
     else:
         #return JSON wanted
@@ -270,7 +270,7 @@ def Continue(request):
     end      = string['Details']['Frame_end']
 
     if not Story.objects.filter(story_name = story, user_name = username).exists():
-        return HttpResponse("{}",status = 400)
+        return HttpResponse(json.dumps({'Error':'Story does not exist'}),status = 400)
     
     #getting the story and basic data for accessing the db
     s                = Story.objects.get(story_name = story, user_name = username)
@@ -279,10 +279,10 @@ def Continue(request):
 
     if start > last_known_frame + 1:
         #if the start frame is larger than the last known frame
-        return HttpResponse("{}",status = 400)
+        return HttpResponse(json.dumps({'Error':'Frame out of bounds'}),status = 400)
 
     if start > end:
-        return HttpResponse("{}",status = 400)
+        return HttpResponse(json.dumps({'Error':'Frame out of bounds'}),status = 400)
 
     #FRAMES
     for elem in range(last_known_frame - 1, end):
@@ -347,7 +347,7 @@ def generate_response(username, story, frame_start, frame_end):
             }
 
     if not Story.objects.filter(story_name = story, user_name = username).exists():
-        return HttpResponse("{}",status = 400)
+        return HttpResponse(json.dumps({'Error':'Story does not exist'}),status = 400)
 
     s      = Story.objects.get(story_name = story, user_name = username)
     frames = s.frame_set.order_by('frame_id')
