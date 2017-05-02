@@ -241,7 +241,7 @@ def UpdateText(request):
         for elem in string['Frames']:
             f = frames[start_iterator - 1]
             for i, sub_elem in enumerate(elem['Characters']):
-                char_name = sub_elem['Name']
+                #char_name = sub_elem['Name']
                 text      = sub_elem['Text']
                 c      = f.character_set.all()[i]
                 c.text = text
