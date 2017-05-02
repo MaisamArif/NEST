@@ -277,18 +277,15 @@ def Continue(request):
     last_known_frame = len(s.frame_set.all())
     char_objs        = s.characterobjects_set.order_by('character_id')
 
-    if last_known_frame + 1 > start and end <= last_known_frame:
-        return generate_response(username, story, start, end)
-
-    if last_known_frame + 1 >start:
-        print "frame ob check"
+    if start > last_known_frame + 1:
+        #if the start frame is larger than the last known frame
         return HttpResponse("{}",status = 400)
 
     if start > end:
         return HttpResponse("{}",status = 400)
 
     #FRAMES
-    for elem in range(start - 1, end):
+    for elem in range(last_known_frame - 1, end):
         frame = Frame(background_image = 'https://responsivewebcomics.me" + "/mint_background.jpg', frame_id = elem+1, story = s)
         frame.save()
 
