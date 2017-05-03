@@ -6,6 +6,8 @@
  * @preserve
  */
 ;
+
+
 (function($) {
 
 	var defaults = {
@@ -77,6 +79,7 @@
 	var adjustFocus = function($el) {
 		var imageW = $el.data('imageW');
 		var imageH = $el.data('imageH');
+
 		var imageSrc = $el.data('imageSrc');
 
 		if (!imageW && !imageH && !imageSrc) {
@@ -100,6 +103,7 @@
 		//Which is over by more?
 		var wR = imageW / containerW;
 		var hR = imageH / containerH;
+
 
 		//Reset max-width and -height
 		$image.css({

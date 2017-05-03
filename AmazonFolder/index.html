@@ -9,37 +9,166 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/requests.js"></script>
 
 <link rel="stylesheet" type="text/css" href="css/style.css">
 
 <link rel="stylesheet" href="css/focuspoint.css">
 <script src="js/focuspoint.js"></script>
 
-<!--<script src="js/masonry.pkgd.min.js"></script>-->
-<script type="text/javascript" src="js/json_parser.js"></script>
+<script src="js/masonry.pkgd.min.js"></script>
+
+<!--<script type="text/javascript" src="js/json_parser.js"></script>-->
+
 <!--<script src="js/webcomic.js"></script>-->
 
 <link rel=icon href=images/Alternative/favicon.png>
 </head>
 
 <body>
+<button type="button" class="btn btn-info"  data-toggle="modal" data-target="#myModal" id="menu-button">Start New Story</button>
+<button type="button" class="btn btn-info"  data-toggle="modal" data-target="#continueModal" id="menu-button">Continue Story</button>
 
-<div id="ComicFrame">
-  <div id="LeftFrame" class="focuspoint" data-focus-x="-0.47" data-focus-y="0.54" data-focus-w="899" data-focus-h="800">
-    <div class="speech-bub-left" id="C1TextBox">Default Text 1</div>
-    <img src="images/Alternative/atlet.png" alt="" />
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" onclick=clearForm("myModal")>&times;</button>
+          <h4 class="modal-title">Initialization Request</h4>
+        </div>
+        <div class="modal-body">
+          <div id="error-myModal"></div>
+          <form name="comicform" id="comicform" action="javascript:initialize();">
+          <div class="form-group">
+            <label for="Username">Username:</label>
+            <input type="text" class="form-control" name="Username" id="Username">
+          </div>
+          <div class="form-group">
+            <label for="Story">Story:</label>
+            <input type="text" class="form-control" name="Story" id="Story">
+          </div>
+          <label>Character 1: </label>
+          <select name="Name" form="comicform">
+            <option value="Shark">Shark</option>
+            <option value="SeaLion">SeaLion</option>
+            <option value="Turtle">Turtle</option>
+            <option value="SeaTurtle">SeaTurtle</option>
+            <option value="Octopus">Octopus</option>
+            <option value="Rabbit">Rabbit</option>
+          </select>
+          <label>Character 2: </label>
+          <select name="Name" form="comicform">
+            <option value="Shark">Shark</option>
+            <option value="SeaLion">SeaLion</option>
+            <option value="Turtle">Turtle</option>
+            <option value="SeaTurtle">SeaTurtle</option>
+            <option value="Octopus">Octopus</option>
+            <option value="Rabbit">Rabbit</option>
+          </select>
+          <br></br>
+          <label>Emotion for Character 1: </label>
+          <select name="Emotion" form="comicform">
+            <option value="happy">Happy</option>
+            <option value="sad">Sad</option>
+            <option value="angry">Angry</option>
+            <option value="fear">Fear</option>
+          </select>
+          <label>Character 2: </label>
+          <select name="Emotion" form="comicform">
+            <option value="happy">Happy</option>
+            <option value="sad">Sad</option>
+            <option value="angry">Angry</option>
+            <option value="fear">Fear</option>
+          </select>
+          <div class="form-group">
+            <label for="soc1">Sociability for Character 1:</label>
+            <input name="Social" type="number" step="0.1" value="0.5" min="0" max="1" class="form-control" id="soc1">
+          </div>
+          <div class="form-group">
+            <label for="soc2">Sociability for Character 2:</label>
+            <input name="Social" type="number" step="0.1" value="0.5" min="0" max="1" class="form-control" id="soc2">
+          </div>
+          <input type="submit">
+        </form>
+        </div>
+        </div>
+      </div>
+
+    </div>
   </div>
-  <div id="RightFrame" class="focuspoint" data-focus-x="-0.39" data-focus-y="0.04" data-focus-w="1467" data-focus-h="1641">
-    <div class="speech-bub-left" id="C1TextBox">Default Text 1</div>
-    <img src="images/Alternative/default.png" alt="" />
+
+
+<div class="modal fade" id="continueModal" role="dialog">
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" onclick=clearForm("continueModal")>&times;</button>
+          <h4 class="modal-title">Continue Existing Story</h4>
+        </div>
+        <div class="modal-body">
+          <div id="error-continueModal"></div>
+          <form name="comicform" id="continueform" action="javascript:continueExistingStory();">
+          <div class="form-group">
+            <label for="Username">Username:</label>
+            <input type="text" class="form-control" name="Username" id="Username">
+            <div class="form-group">
+              <label for="Username">Story:</label>
+              <input type="text" class="form-control" name="StoryContinue" id="StoryContinue">
+            </div>
+          <div class="form-group">
+            <label for="Username">Starting Frame Number:</label>
+            <input type="number" class="form-control" name="FrameContinue" id="FrameContinue">
+          </div>
+          </div>
+          <input type="submit">
+        </form>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<button type="button" style="display: none;" class="btn btn-info" onclick="updateTextOnBackEnd()" id="next-button">next</button>
+<div id="ComicFrame">
+  <div id="LeftContainer">
+    <div id="wrapper">
+    <div class="speech-bub-left" contenteditable id="C1TextBox"><p id="c1text">Welcome to Responsive Web Comics! Click inside the speech bubbles to edit the dialogue.</p></div>
+    <svg version="1.1" id="left-point" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+    	 width="25.863px" height="21.969px" viewBox="0 0 25.863 21.969" enable-background="new 0 0 25.863 21.969" xml:space="preserve">
+    <path fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-miterlimit="10" d="M11.92,1.941c0,10.501-5.332,19-11.92,19
+    	c13.727,0,24.833-8.499,24.833-19"/>
+    <rect x="12.025" y="0.035" fill="#FFFFFF" width="12.808" height="1.906"/>
+    </svg>
+    </div>
+    <div id="LeftFrame" class="focuspoint" data-focus-x="0.40" data-focus-y="1.0" data-focus-w="451" data-focus-h="516">
+      <img id="LeftChar" src="https://responsivewebcomics.me/images/bert-1.png" alt="" />
+    </div>
+  </div>
+  <div id="RightContainer">
+    <div class="speech-bub-right" contenteditable="plaintext-only" id="C2TextBox"><p id="c2text">Use the initialization button to create your first comic or continue editing an existing story.</p></div>
+    <svg version="1.1" id="right-point" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+    	 width="25.864px" height="21.969px" viewBox="0 -1.906 25.864 21.969" enable-background="new 0 -1.906 25.864 21.969"
+    	 xml:space="preserve">
+    <path fill="#FFFFFF" d="M0.906-1.906C1.031,10.5,12.138,19,25.865,19c-6.588,0-11.92-8.5-12.045-20.906H0.906z"/>
+    <path fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" d="M1.031,0c0,10.501,11.106,19,24.833,19
+    	c-6.588,0-11.92-8.499-11.92-19"/>
+    </svg>
+    <div id="RightFrame" class="focuspoint" data-focus-x="-0.20" data-focus-y="1.0" data-focus-w="1358454" data-focus-h="1681417">
+      <img id="RightChar" src="https://responsivewebcomics.me/images/sinceresmile-1.png" alt="" />
+    </div>
   </div>
 </div>
-
+<footer>
+  <p id="p-num"style:"text-align: center">"<span id="title">Sample Story</span>", Page <span id="number">1</span></p>
+</footer>
+<script type="text/javascript" src="js/json_parser.js"></script>
 <script>
 
-$( document ).ready(function() {
-$('.focuspoint').focusPoint();
-});
 
 </script>
 
